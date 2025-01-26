@@ -13,10 +13,8 @@ public class Conexion {
     private static final String PORTNUMBER = "3306";
     private static final String DATABASE = "bd_ejercicio1_ad";
 
-    // Constructor privado para evitar instancias externas
     private Conexion() { }
 
-    // Método estático para obtener la conexión
     public static Connection obtenerConexion() {
         if (conn == null) {
             try {
@@ -38,7 +36,6 @@ public class Conexion {
         return conn;
     }
 
-    // Método estático para cerrar la conexión
     public static void cerrarConexion() {
         if (conn != null) {
             try {

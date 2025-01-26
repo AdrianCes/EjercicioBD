@@ -57,7 +57,7 @@ public class GeneradorBD {
     public void insertarServidores() {
         try (PreparedStatement ps = conexion.prepareStatement("INSERT INTO Servidores (nombre, region) VALUES (? , ?)")) {
             String[] regiones = { "Ámerica", "Europa", "África" };
-            for (int i = 1; i < servidores.length; i++) {
+            for (int i = 0; i < servidores.length; i++) {
                 ps.setString(1, servidores[i]);
                 ps.setString(2, regiones[i % regiones.length]);
                 ps.addBatch();
@@ -70,7 +70,7 @@ public class GeneradorBD {
 
     public void insertarUsuarios() {
         try (PreparedStatement ps = conexion.prepareStatement("INSERT INTO Usuarios (nombre, codigo_unico) VALUES (? , ?)")) {
-            for (int i = 1; i < nombres.length; i++) {
+            for (int i = 0; i < nombres.length; i++) {
                 ps.setString(1, nombres[i]);
                 ps.setInt(2, generarCodigo());
                 ps.addBatch();
@@ -83,7 +83,7 @@ public class GeneradorBD {
 
     public void insertarMapas() {
         try (PreparedStatement ps = conexion.prepareStatement("INSERT INTO Mapas (nombre, dificultad) VALUES (? , ?)")) {
-            for (int i = 1; i < mapas.length; i++) {
+            for (int i = 0; i < mapas.length; i++) {
                 ps.setString(1, mapas[i]);
                 ps.setInt(2, random.nextInt(10));
                 ps.addBatch();
@@ -102,7 +102,7 @@ public class GeneradorBD {
             ResultSet rsServidores = conexion.createStatement().executeQuery("SELECT COUNT(*) FROM Servidores");
             rsServidores.next();
             int numServidores = rsServidores.getInt(1);
-            for (int i = 1; i < nombresPersonajes.length; i++) {
+            for (int i = 0; i < nombresPersonajes.length; i++) {
                 ps.setString(1, nombresPersonajes[i]);
                 ps.setInt(2, random.nextInt(numUsuarios) + 1);
                 ps.setInt(3, random.nextInt(numServidores) + 1);
