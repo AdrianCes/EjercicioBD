@@ -19,7 +19,7 @@ public class CreadorBD {
                 String tablaUsuarios = "CREATE TABLE IF NOT EXISTS Usuarios ("
                 + "id INT AUTO_INCREMENT PRIMARY KEY,"
                 + "nombre VARCHAR(50) NOT NULL,"
-                + "codigo_unico CHAR(4) NOT NULL"
+                + "codigo_unico VARCHAR(4) NOT NULL UNIQUE"
                 + ");";
                 stm.execute(tablaUsuarios);
 

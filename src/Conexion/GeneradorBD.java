@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Random;
+import java.util.Set;
 
 public class GeneradorBD {
 
@@ -52,6 +53,7 @@ public class GeneradorBD {
     };
 
     private static final Random random = new Random();
+    private Set<String> codigosGenerados = new HashSet<>(); 
     Connection conexion = Conexion.obtenerConexion();
 
     public void insertarServidores() {
@@ -71,8 +73,9 @@ public class GeneradorBD {
     public void insertarUsuarios() {
         try (PreparedStatement ps = conexion.prepareStatement("INSERT INTO Usuarios (nombre, codigo_unico) VALUES (? , ?)")) {
             for (int i = 0; i < nombres.length; i++) {
+                String codigoUnico = generarCodigoUnico();
                 ps.setString(1, nombres[i]);
-                ps.setInt(2, generarCodigo());
+                ps.setInt(2, generarCodigoUnico());
                 ps.addBatch();
             }
             ps.executeBatch();
@@ -154,8 +157,29 @@ public class GeneradorBD {
         }
     }
 
-    public int generarCodigo() {
-        return 1000 + random.nextInt(9000); //
+    public String generarCodigoUnico(){
+        String codigo;
+        do {
+            int numero = random.nextInt(10000);
+            codigo = String.format("%04d", numero);
+        } while (verificaCodigo(codigo) || codigosGenerados.contains(codigo));
+        codigosGenerados.add(codigo);
+        return codigo;
+
+    }
+
+    private boolean verificaCodigo(String codigo){
+        try (PreparedStatement ps = conexion.prepareStatement("SELECT 1 FROM Usuarios WHERE codigo_unico = ?")) {
+            ps.setString(1, codigo);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            } catch (SQLException e) {
+                System.err.println("Error de SQL al verificar el codigo:" + e.getMessage());
+            }
+        } catch (NullPointerException e) {
+            System.err.println("Error en la conexión a la base de datos:" + e.getMessage());
+        }
+        return false;
     }
 
     public void insertarDatos() {
